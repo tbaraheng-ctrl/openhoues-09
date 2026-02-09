@@ -761,8 +761,34 @@
         }
 
         // -- Print Management --
-        function incrementCode(c) { if(!c) return "1"; return c.replace(/(\d+)$/, m => String(parseInt(m) + 1).padStart(m.length, '0')); }
-        async function fetchAndSetNextCertNo() { const res = await callAPI({ action: 'getLastCertNo' }); return (res.status === 'success' && res.lastNo) ? incrementCode(res.lastNo) : (document.getElementById('tmpl_start_no').value || '001'); }
+        function incrementCode(c) { 
+            if(!c) return "1"; 
+            // Check for digits before a slash (e.g., 123/2567)
+            if (/(\d+)\//.test(c)) {
+                return c.replace(/(\d+)(\/)/, (match, num, slash) => {
+                    return String(parseInt(num) + 1).padStart(num.length, '0') + slash;
+                });
+            }
+            // Fallback: Original behavior (digits at the end)
+            return c.replace(/(\d+)$/, m => String(parseInt(m) + 1).padStart(m.length, '0')); 
+        }
+        async function fetchAndSetNextCertNo() { 
+            // 1. Prioritize manual input from the UI if present
+            const manualVal = document.getElementById('tmpl_start_no').value;
+            if (manualVal && manualVal.trim() !== '') {
+                return manualVal;
+            }
+
+            // 2. Fallback to server's last number
+            const res = await callAPI({ action: 'getLastCertNo' }); 
+            if (res.status === 'success' && res.lastNo) {
+                return incrementCode(res.lastNo);
+            }
+            
+            // 3. Default
+            return '001'; 
+        }
+
         async function loadPrintQueue() {
             const btn = document.getElementById('btnRefreshQueue'); if(btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; }
             const res = await callAPI({ action: 'getPrintQueue' }); if(btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-sync-alt"></i> อัปเดต'; }
