@@ -545,7 +545,6 @@
                 else if (type === 'participate') rewardEl.innerText = 'ได้เข้าร่วมกิจกรรม [กิจกรรมย่อย]';
                 else if (type === 'organization') rewardEl.innerText = 'ได้ให้การสนับสนุนกิจกรรม [กิจกรรมย่อย]';
             }
-            // Add Fix: Reload List and Reset Design
             loadTemplateList(type).then(() => {
                 resetTemplateDesign(false);
             });
@@ -773,20 +772,27 @@
             return c.replace(/(\d+)$/, m => String(parseInt(m) + 1).padStart(m.length, '0')); 
         }
         async function fetchAndSetNextCertNo() { 
-            // 1. Prioritize manual input from the UI if present
+            // 1. Try to fetch from server first to ensure continuity and uniqueness
+            try {
+                const res = await callAPI({ action: 'getLastCertNo' }); 
+                if (res.status === 'success' && res.lastNo) {
+                    const next = incrementCode(res.lastNo);
+                    // Update the UI input to match the system's logic
+                    const inputEl = document.getElementById('tmpl_start_no');
+                    if(inputEl) inputEl.value = next;
+                    return next;
+                }
+            } catch (e) {
+                console.error("Error fetching last cert no", e);
+            }
+
+            // 2. Fallback: If server has no data (first time), use manual input or default
             const manualVal = document.getElementById('tmpl_start_no').value;
             if (manualVal && manualVal.trim() !== '') {
                 return manualVal;
             }
-
-            // 2. Fallback to server's last number
-            const res = await callAPI({ action: 'getLastCertNo' }); 
-            if (res.status === 'success' && res.lastNo) {
-                return incrementCode(res.lastNo);
-            }
             
-            // 3. Default
-            return '001'; 
+            return '001/2567'; 
         }
 
         async function loadPrintQueue() {
