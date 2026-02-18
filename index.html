@@ -27,7 +27,7 @@
 
     <script>
         // *** สำคัญ: ตรวจสอบ URL นี้ให้ตรงกับ Web App URL ที่คุณ Deployment ***
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwTterP0MnkQESe8OeyjtcgHikwQabHRlSm4o5NP3Y-sS6o7AqMM9qiFpklPNv52h3HqA/exec'; 
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw0R3cxJvZ5mldEa-6XAebdfMsy5VUH4Ays71xfIboFRy_VoEVT8_rD4enK3n-kHUdM/exec'; 
     </script>
     
     <style>
@@ -151,7 +151,8 @@
                 <a href="#" onclick="showTab('activity')" class="flex items-center py-3 px-6 hover:bg-white/10 nav-item active-nav border-l-4 border-nsGold transition-all"><i class="fas fa-list-check w-6"></i> <span class="ml-2 text-sm font-medium">จัดการกิจกรรม</span></a>
                 <a href="#" onclick="showTab('template')" class="flex items-center py-3 px-6 hover:bg-white/10 nav-item border-l-4 border-transparent transition-all"><i class="fas fa-pencil-ruler w-6"></i> <span class="ml-2 text-sm font-medium">ออกแบบเทมเพลต</span></a>
                 <a href="#" onclick="showTab('print')" class="flex items-center py-3 px-6 hover:bg-white/10 nav-item border-l-4 border-transparent transition-all"><i class="fas fa-award w-6"></i> <span class="ml-2 text-sm font-medium">เกียรติบัตรรางวัล</span></a>
-                <a href="#" onclick="showTab('participation')" class="flex items-center py-3 px-6 hover:bg-white/10 nav-item border-l-4 border-transparent transition-all"><i class="fas fa-users w-6"></i> <span class="ml-2 text-sm font-medium">เกียรติบัตรเข้าร่วม</span></a>
+                <a href="#" onclick="showTab('compParticipation')" class="flex items-center py-3 px-6 hover:bg-white/10 nav-item border-l-4 border-transparent transition-all"><i class="fas fa-star w-6"></i> <span class="ml-2 text-sm font-medium">เกียรติบัตรเข้าร่วม (แข่งขัน)</span></a>
+                <a href="#" onclick="showTab('participation')" class="flex items-center py-3 px-6 hover:bg-white/10 nav-item border-l-4 border-transparent transition-all"><i class="fas fa-users w-6"></i> <span class="ml-2 text-sm font-medium">เกียรติบัตรเข้าร่วม (ลงทะเบียน)</span></a>
                 <a href="#" onclick="showTab('organization')" class="flex items-center py-3 px-6 hover:bg-white/10 nav-item border-l-4 border-transparent transition-all"><i class="fas fa-building w-6"></i> <span class="ml-2 text-sm font-medium">เกียรติบัตรหน่วยงาน</span></a>
             </nav>
             <div class="p-4 border-t border-white/10"><a href="#" onclick="logout()" class="flex items-center justify-center py-2.5 px-4 bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white rounded-xl text-xs font-bold transition-all"><i class="fas fa-sign-out-alt mr-2"></i> ออกจากระบบ</a></div>
@@ -280,7 +281,7 @@
                             <div id="el_static_1" class="editable-element text-lg" style="top: 180px; left: 10%; width: 80%;">ขอมอบเกียรติบัตรฉบับนี้ให้ไว้เพื่อแสดงว่า</div>
                             <div id="el_recipient" class="editable-element font-bold text-3xl" style="color: #001f3f; top: 220px; left: 5%; width: 90%;">[ชื่อ-สกุล ผู้รับรางวัล]</div>
                             <div id="el_school" class="editable-element text-lg" style="color: #4b5563; top: 260px; left: 5%; width: 90%;">[โรงเรียน/สังกัด]</div>
-                            <div id="el_reward" class="editable-element font-bold text-xl" style="color: #FFD700; top: 310px; left: 5%; width: 90%;">ได้รับรางวัล [รางวัล/เหรียญ] ในการแข่งขัน [กิจกรรมย่อย]</div>
+                            <div id="el_reward" class="editable-element font-bold text-xl" style="color: #FFD700; top: 310px; left: 5%; width: 90%;">ได้รับ [รางวัล/เหรียญ] ในการแข่งขัน [กิจกรรมย่อย]</div>
                             <div id="el_activity_name" class="editable-element font-bold text-lg" style="top: 370px; left: 5%; width: 90%;">[ชื่อกิจกรรม]</div>
                             <div id="el_activity_date" class="editable-element text-sm" style="top: 400px; left: 5%; width: 90%;">[วันที่จัดกิจกรรม]</div>
                             <div id="el_activity_loc" class="editable-element text-sm" style="top: 425px; left: 5%; width: 90%;">[สถานที่จัดกิจกรรม]</div>
@@ -294,24 +295,46 @@
                 </div>
             </div>
 
-            <!-- Print Section -->
+            <!-- Print Section (Award) -->
             <div id="printSection" class="content-section hidden p-8 overflow-auto h-full">
                 <div class="flex justify-between items-center mb-8"><h2 class="text-2xl font-bold text-nsBlue flex items-center gap-3"><i class="fas fa-medal"></i> คิวพิมพ์เกียรติบัตรรางวัล</h2></div>
                 <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
                     <div class="p-6 border-b flex justify-between items-center bg-gray-50/50">
                         <h3 class="font-bold text-nsBlue text-xs uppercase tracking-widest">ดึงข้อมูลจากชีท "ผลการแข่งขัน"</h3>
                         <div class="flex gap-2">
-                            <button onclick="printAllPending()" class="bg-nsGold text-nsBlue px-5 py-2 rounded-xl text-xs font-bold shadow-sm hover:shadow-md transition">พิมพ์คิวทั้งหมด</button>
+                            <button onclick="printSelectedAwards()" class="bg-nsGold text-nsBlue px-5 py-2 rounded-xl text-xs font-bold shadow-sm hover:shadow-md transition">พิมพ์ที่เลือก</button>
                             <button id="btnRefreshQueue" onclick="loadPrintQueue()" class="text-xs text-nsBlue font-bold hover:bg-blue-50 px-4 py-2 rounded-xl border border-blue-100 transition"><i class="fas fa-sync-alt"></i> อัปเดต</button>
                         </div>
                     </div>
-                    <div class="overflow-x-auto"><table class="w-full text-left"><thead class="bg-gray-50 text-nsBlue text-[10px] uppercase font-black tracking-widest"><tr><th class="p-5 border-b">ผู้รับรางวัล</th><th class="p-5 border-b">โรงเรียน</th><th class="p-5 border-b">รางวัล</th><th class="p-5 border-b">สถานะ</th><th class="p-5 border-b text-right">คำสั่ง</th></tr></thead><tbody id="printQueueBody" class="divide-y divide-gray-50 text-sm text-nsBlue"></tbody></table></div>
+                    <div class="overflow-x-auto"><table class="w-full text-left"><thead class="bg-gray-50 text-nsBlue text-[10px] uppercase font-black tracking-widest"><tr><th class="p-5 border-b w-10 text-center"><input type="checkbox" onchange="toggleSelectAllAwards(this)" class="rounded text-nsBlue focus:ring-nsBlue w-4 h-4 cursor-pointer"></th><th class="p-5 border-b">ผู้รับรางวัล</th><th class="p-5 border-b">โรงเรียน</th><th class="p-5 border-b">กิจกรรม</th><th class="p-5 border-b">รางวัล</th><th class="p-5 border-b">สถานะ</th><th class="p-5 border-b text-right">คำสั่ง</th></tr></thead><tbody id="printQueueBody" class="divide-y divide-gray-50 text-sm text-nsBlue"></tbody></table></div>
+                </div>
+            </div>
+
+            <!-- Print Comp Participation Section (NEW) -->
+            <div id="compParticipationSection" class="content-section hidden p-8 overflow-auto h-full">
+                <div class="flex justify-between items-center mb-8"><h2 class="text-2xl font-bold text-nsBlue flex items-center gap-3"><i class="fas fa-star"></i> คิวพิมพ์เกียรติบัตรเข้าร่วม (แข่งขัน)</h2></div>
+                <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="p-6 border-b flex justify-between items-center bg-gray-50/50">
+                        <!-- ปุ่มประมวลผลใหม่ -->
+                        <div class="flex justify-between items-center w-full mb-4">
+                            <h3 class="font-bold text-nsBlue text-xs uppercase tracking-widest">ข้อมูลจากชีท "แข่งขันเข้าร่วม" (ผู้ไม่ได้รับรางวัล)</h3>
+                             <button onclick="processCompParticipation()" class="bg-blue-500 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-md hover:bg-blue-600 transition flex items-center gap-2">
+                                <i class="fas fa-cogs"></i> ประมวลผลรายชื่อ
+                            </button>
+                        </div>
+                        
+                        <div class="flex gap-2">
+                            <button onclick="printSelectedCompParticipation()" class="bg-nsGold text-nsBlue px-5 py-2 rounded-xl text-xs font-bold shadow-sm hover:shadow-md transition">พิมพ์ที่เลือก</button>
+                            <button id="btnRefreshCompQueue" onclick="loadCompParticipationList()" class="text-xs text-nsBlue font-bold hover:bg-blue-50 px-4 py-2 rounded-xl border border-blue-100 transition"><i class="fas fa-sync-alt"></i> อัปเดต</button>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto"><table class="w-full text-left"><thead class="bg-gray-50 text-nsBlue text-[10px] uppercase font-black tracking-widest"><tr><th class="p-5 border-b w-10 text-center"><input type="checkbox" onchange="toggleSelectAllComp(this)" class="rounded text-nsBlue focus:ring-nsBlue w-4 h-4 cursor-pointer"></th><th class="p-5 border-b">ผู้เข้าร่วม</th><th class="p-5 border-b">โรงเรียน</th><th class="p-5 border-b">กิจกรรม</th><th class="p-5 border-b">สถานะ</th><th class="p-5 border-b">สถานะการพิมพ์</th><th class="p-5 border-b text-right">คำสั่ง</th></tr></thead><tbody id="compParticipationQueueBody" class="divide-y divide-gray-50 text-sm text-nsBlue"></tbody></table></div>
                 </div>
             </div>
 
             <!-- Participation Section -->
             <div id="participationSection" class="content-section hidden p-8 overflow-auto h-full">
-                <h2 class="text-2xl font-bold text-nsBlue mb-8 flex items-center gap-3"><i class="fas fa-users"></i> เกียรติบัตรผู้เข้าร่วม</h2>
+                <h2 class="text-2xl font-bold text-nsBlue mb-8 flex items-center gap-3"><i class="fas fa-users"></i> เกียรติบัตรผู้เข้าร่วม (ลงทะเบียน)</h2>
                 <div class="bg-white p-8 rounded-3xl shadow-sm mb-8 border border-gray-100 relative overflow-hidden">
                     <div class="flex flex-col md:flex-row gap-6 items-end relative z-10">
                         <div class="flex-1 w-full">
@@ -324,9 +347,12 @@
                 <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
                     <div class="p-6 border-b flex justify-between items-center bg-gray-50/50">
                         <h3 class="font-bold text-nsBlue text-xs uppercase tracking-widest">รายการที่ประมวลผลแล้ว</h3>
-                        <button onclick="loadParticipationList()" class="text-xs text-nsBlue font-bold hover:underline"><i class="fas fa-sync"></i> รีเฟรช</button>
+                        <div class="flex gap-2">
+                             <button onclick="printSelectedParticipation()" class="bg-nsGold text-nsBlue px-5 py-2 rounded-xl text-xs font-bold shadow-sm hover:shadow-md transition">พิมพ์ที่เลือก</button>
+                             <button onclick="loadParticipationList()" class="text-xs text-nsBlue font-bold hover:bg-blue-50 px-4 py-2 rounded-xl border border-blue-100 transition"><i class="fas fa-sync-alt"></i> อัปเดต</button>
+                        </div>
                     </div>
-                    <div class="overflow-x-auto"><table class="w-full text-left"><thead class="bg-gray-50 text-nsBlue text-[10px] uppercase font-black"><tr><th class="p-5 border-b">ผู้รับ</th><th class="p-5 border-b">โรงเรียน</th><th class="p-5 border-b text-right">คำสั่ง</th></tr></thead><tbody id="participationTableBody" class="divide-y divide-gray-50 text-sm text-nsBlue"></tbody></table></div>
+                    <div class="overflow-x-auto"><table class="w-full text-left"><thead class="bg-gray-50 text-nsBlue text-[10px] uppercase font-black"><tr><th class="p-5 border-b w-10 text-center"><input type="checkbox" onchange="toggleSelectAllParticipation(this)" class="rounded text-nsBlue focus:ring-nsBlue w-4 h-4 cursor-pointer"></th><th class="p-5 border-b">ผู้รับ</th><th class="p-5 border-b">โรงเรียน</th><th class="p-5 border-b">กิจกรรม</th><th class="p-5 border-b text-right">คำสั่ง</th></tr></thead><tbody id="participationTableBody" class="divide-y divide-gray-50 text-sm text-nsBlue"></tbody></table></div>
                 </div>
             </div>
 
@@ -345,7 +371,7 @@
                         <table class="w-full text-left">
                             <thead class="bg-gray-50 text-nsBlue text-[10px] uppercase font-black tracking-widest">
                                 <tr>
-                                    <th class="p-5 border-b w-10 text-center"><input type="checkbox" onchange="toggleSelectAllOrg(this)" class="rounded text-nsBlue focus:ring-nsBlue"></th>
+                                    <th class="p-5 border-b w-10 text-center"><input type="checkbox" onchange="toggleSelectAllOrg(this)" class="rounded text-nsBlue focus:ring-nsBlue w-4 h-4 cursor-pointer"></th>
                                     <th class="p-5 border-b">ชื่อหน่วยงาน</th>
                                     <th class="p-5 border-b">กิจกรรม</th>
                                     <th class="p-5 border-b">สถานะ</th>
@@ -389,7 +415,7 @@
 
     <script>
         // -- Logic Variables --
-        let currentUser = null, activities = [], currentTemplateType = 'award', printQueue = [], participationQueue = [], organizationQueue = [], selectedElement = null, isDragging = false, isResizing = false, dragOffset = {x:0,y:0}, resizeStart = {x:0,y:0,w:0,h:0}, historyStack = [], currentZoom = 0.6, idsToPrint = [], fileUploadQueue = {bg:null, sig:null}, currentImageIds = {bg:null, sig:null}, initialPreviewHTML = '';
+        let currentUser = null, activities = [], currentTemplateType = 'award', printQueue = [], participationQueue = [], organizationQueue = [], compParticipationQueue = [], selectedElement = null, isDragging = false, isResizing = false, dragOffset = {x:0,y:0}, resizeStart = {x:0,y:0,w:0,h:0}, historyStack = [], currentZoom = 0.6, idsToPrint = [], fileUploadQueue = {bg:null, sig:null}, currentImageIds = {bg:null, sig:null}, initialPreviewHTML = '';
 
         // -- Initialization --
         document.addEventListener('DOMContentLoaded', () => {
@@ -541,10 +567,11 @@
             document.getElementById('btnTabOrg').className = type === 'organization' ? 'flex-1 py-1.5 text-xs rounded bg-white shadow-sm text-nsBlue font-bold transition' : 'flex-1 py-1.5 text-xs rounded text-gray-500 transition';
             const rewardEl = document.getElementById('el_reward');
             if(rewardEl) {
-                if (type === 'award') rewardEl.innerText = 'ได้รับรางวัล [รางวัล/เหรียญ] ในการแข่งขัน [กิจกรรมย่อย]';
+                if (type === 'award') rewardEl.innerText = 'ได้รับ [รางวัล/เหรียญ] ในการแข่งขัน [กิจกรรมย่อย]';
                 else if (type === 'participate') rewardEl.innerText = 'ได้เข้าร่วมกิจกรรม [กิจกรรมย่อย]';
                 else if (type === 'organization') rewardEl.innerText = 'ได้ให้การสนับสนุนกิจกรรม [กิจกรรมย่อย]';
             }
+            // Add Fix: Reload List and Reset Design
             loadTemplateList(type).then(() => {
                 resetTemplateDesign(false);
             });
@@ -715,7 +742,7 @@
                     tb.innerHTML = '';
                     organizationQueue.forEach(item => {
                         const isPrinted = item.status === 'พิมพ์แล้ว';
-                        const checkbox = isPrinted ? '' : `<input type="checkbox" value="${item.id}" class="org-checkbox rounded text-nsBlue focus:ring-nsBlue w-4 h-4 cursor-pointer">`;
+                        const checkbox = `<input type="checkbox" value="${item.id}" class="org-checkbox rounded text-nsBlue focus:ring-nsBlue w-4 h-4 cursor-pointer">`;
                         const statusBadge = isPrinted 
                             ? `<span class="bg-green-100 text-green-700 px-2 py-1 rounded text-[10px] font-bold">พิมพ์แล้ว</span>` 
                             : `<span class="bg-yellow-100 text-yellow-700 px-2 py-1 rounded text-[10px] font-bold">รอพิมพ์</span>`;
@@ -737,6 +764,57 @@
                 }
             }
         }
+        
+        // --- NEW: Load Comp Participation (Non-Winners) ---
+        async function loadCompParticipationList() {
+            const btn = document.getElementById('btnRefreshCompQueue');
+            if(btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; }
+            
+            const res = await callAPI({ action: 'getCompParticipationList' }); 
+            
+            if(btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-sync-alt"></i> อัปเดต'; }
+
+            if(res.status === 'success') {
+                compParticipationQueue = res.data; 
+                const tb = document.getElementById('compParticipationQueueBody'); 
+                if(tb) {
+                    tb.innerHTML = '';
+                    compParticipationQueue.forEach(i => {
+                        const sName = String(i.student).replace(/[\[\]"]/g, '');
+                        const isPrinted = i.status === 'พิมพ์แล้ว';
+                        const checkbox = `<input type="checkbox" value="${i.id}" class="comp-checkbox rounded text-nsBlue focus:ring-nsBlue w-4 h-4 cursor-pointer">`;
+                        const statusBadge = isPrinted 
+                            ? `<span class="bg-green-100 text-green-700 px-2 py-1 rounded text-[10px] font-bold">พิมพ์แล้ว</span>` 
+                            : `<span class="bg-yellow-100 text-yellow-700 px-2 py-1 rounded text-[10px] font-bold">รอพิมพ์</span>`;
+                        const activityName = i.activity || '-';
+                        const awardName = i.award_name || 'เข้าร่วม'; // Use data from sheet or default
+
+                        tb.innerHTML += `<tr class="border-b hover:bg-gray-50/50">
+                            <td class="p-5 text-center">${checkbox}</td>
+                            <td class="p-5 font-bold text-nsBlue">${sName}</td>
+                            <td class="p-5 text-xs text-gray-500">${i.school}</td>
+                            <td class="p-5 text-xs text-gray-500">${activityName}</td>
+                            <td class="p-5 text-nsGold font-bold">${awardName}</td>
+                            <td class="p-5">${statusBadge}</td>
+                            <td class="p-5 text-right"><button onclick="printCert('${i.id}')" class="bg-nsBlue text-white px-4 py-1.5 rounded-xl text-xs font-bold shadow-sm">พิมพ์</button></td>
+                        </tr>`;
+                    });
+                }
+            }
+        }
+        
+        async function processCompParticipation() {
+             Swal.fire({ title: 'กำลังประมวลผล...', text: 'คัดแยกรายชื่อผู้ไม่ได้รับรางวัล...', didOpen: () => Swal.showLoading() });
+             const res = await callAPI({ action: 'processCompParticipation' });
+             Swal.close();
+             
+             if(res.status === 'success') {
+                 Swal.fire('เสร็จสิ้น', res.message, 'success');
+                 loadCompParticipationList();
+             } else {
+                 Swal.fire('Error', res.message, 'error');
+             }
+        }
 
         // -- Navigation --
         function showTab(tabId) { 
@@ -749,6 +827,9 @@
                 setTimeout(fitToScreen, 100); 
             } 
             if(tabId === 'print') loadPrintQueue(); 
+            if(tabId === 'compParticipation') {
+                loadCompParticipationList(); 
+            }
             if(tabId === 'participation') { 
                  populateParticipationSelect(); 
                  loadParticipationList(); 
@@ -772,7 +853,7 @@
             return c.replace(/(\d+)$/, m => String(parseInt(m) + 1).padStart(m.length, '0')); 
         }
         async function fetchAndSetNextCertNo() { 
-            // 1. Try to fetch from server first to ensure continuity and uniqueness
+            // 1. Always fetch from server first to ensure continuity and uniqueness
             try {
                 const res = await callAPI({ action: 'getLastCertNo' }); 
                 if (res.status === 'success' && res.lastNo) {
@@ -796,18 +877,164 @@
         }
 
         async function loadPrintQueue() {
-            const btn = document.getElementById('btnRefreshQueue'); if(btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; }
-            const res = await callAPI({ action: 'getPrintQueue' }); if(btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-sync-alt"></i> อัปเดต'; }
+            const btn = document.getElementById('btnRefreshQueue'); 
+            const btnRefreshCompQueue = document.getElementById('btnRefreshCompQueue');
+
+            if(btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; }
+            if(btnRefreshCompQueue) { btnRefreshCompQueue.disabled = true; btnRefreshCompQueue.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; }
+
+            const res = await callAPI({ action: 'getPrintQueue' }); 
+            
+            if(btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-sync-alt"></i> อัปเดต'; }
+            if(btnRefreshCompQueue) { btnRefreshCompQueue.disabled = false; btnRefreshCompQueue.innerHTML = '<i class="fas fa-sync-alt"></i> อัปเดต'; }
+
             if(res.status === 'success') {
-                printQueue = res.data; const tb = document.getElementById('printQueueBody'); tb.innerHTML = '';
-                printQueue.forEach(i => {
-                    const sName = String(i.student).replace(/[\[\]"]/g, '');
-                    tb.innerHTML += `<tr class="border-b hover:bg-gray-50/50"><td class="p-5 font-bold text-nsBlue">${sName}</td><td class="p-5 text-xs text-gray-500">${i.school}</td><td class="p-5 text-nsGold font-bold">${i.award_name} ${i.medal}</td><td class="p-5"><span class="px-2 py-1 rounded-lg text-[10px] font-bold ${i.status === 'พิมพ์แล้ว' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}">${i.status}</span></td><td class="p-5 text-right"><button onclick="printCert('${i.id}')" class="bg-nsBlue text-white px-4 py-1.5 rounded-xl text-xs font-bold shadow-sm">พิมพ์</button></td></tr>`;
-                });
+                printQueue = res.data; 
+                
+                // Populate Award Print Queue Table
+                const tbAward = document.getElementById('printQueueBody'); 
+                if(tbAward) {
+                    tbAward.innerHTML = '';
+                    printQueue.forEach(i => {
+                        const sName = String(i.student).replace(/[\[\]"]/g, '');
+                        const isPrinted = i.status === 'พิมพ์แล้ว';
+                        const checkbox = `<input type="checkbox" value="${i.id}" class="award-checkbox rounded text-nsBlue focus:ring-nsBlue w-4 h-4 cursor-pointer">`;
+                        const activityName = i.activity || '-';
+
+                        tbAward.innerHTML += `<tr class="border-b hover:bg-gray-50/50">
+                            <td class="p-5 text-center">${checkbox}</td>
+                            <td class="p-5 font-bold text-nsBlue">${sName}</td>
+                            <td class="p-5 text-xs text-gray-500">${i.school}</td>
+                            <td class="p-5 text-xs text-gray-500">${activityName}</td>
+                            <td class="p-5 text-nsGold font-bold">${i.award_name} ${i.medal}</td>
+                            <td class="p-5"><span class="px-2 py-1 rounded-lg text-[10px] font-bold ${isPrinted ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}">${i.status}</span></td>
+                            <td class="p-5 text-right"><button onclick="printCert('${i.id}')" class="bg-nsBlue text-white px-4 py-1.5 rounded-xl text-xs font-bold shadow-sm">พิมพ์</button></td>
+                        </tr>`;
+                    });
+                }
             }
         }
+        
+        function toggleSelectAllAwards(source) {
+            if(source.closest('#printSection')) {
+                const checkboxes = document.querySelectorAll('#printQueueBody .award-checkbox');
+                checkboxes.forEach(cb => cb.checked = source.checked);
+            } 
+            else if(source.closest('#compParticipationSection')) {
+                const checkboxes = document.querySelectorAll('#compParticipationQueueBody .comp-checkbox');
+                checkboxes.forEach(cb => cb.checked = source.checked);
+            }
+        }
+        
+        function toggleSelectAllComp(source) {
+             const checkboxes = document.querySelectorAll('#compParticipationQueueBody .comp-checkbox');
+             checkboxes.forEach(cb => cb.checked = source.checked);
+        }
+        
+        function toggleSelectAllParticipation(source) {
+            const checkboxes = document.querySelectorAll('#participationTableBody .part-checkbox');
+            checkboxes.forEach(cb => cb.checked = source.checked);
+        }
+
+        async function printSelectedAwards() {
+            const checkboxes = document.querySelectorAll('#printQueueBody .award-checkbox:checked');
+            if(checkboxes.length === 0) return Swal.fire('แจ้งเตือน', 'กรุณาเลือกรายการที่ต้องการพิมพ์', 'warning');
+            
+            idsToPrint = Array.from(checkboxes).map(cb => cb.value);
+            
+            const firstItem = printQueue.find(x => x.id.toString() === idsToPrint[0].toString());
+            
+            // Set type to AWARD
+            currentTemplateType = 'award';
+            
+            Swal.fire({title: 'กำลังเตรียมข้อมูล...', didOpen:()=>Swal.showLoading()});
+            
+            if(firstItem && firstItem.activity) {
+                 await loadTemplateDataDirect(firstItem.activity);
+            }
+
+            const nextNo = await fetchAndSetNextCertNo(); 
+            Swal.close();
+
+            let combined = '';
+            // Generate sample preview (just 1st item)
+            const names = String(firstItem.student).replace(/[\[\]"]/g, '').split(/,|\n/).map(n => n.trim()).filter(n => n.length > 0);
+            const n = names[0];
+            
+            combined += generateSingleCertHTML(firstItem, n, nextNo);
+            combined = `<div class="text-center mb-4 text-nsBlue font-bold">รายการที่เลือกทั้งหมด: ${idsToPrint.length} รายการ (แสดงตัวอย่างใบแรก)</div>` + combined;
+
+            document.getElementById('printPreviewModal').dataset.startNo = nextNo; 
+            showPreview(combined); 
+        }
+
+        async function printSelectedCompParticipation() {
+            const checkboxes = document.querySelectorAll('#compParticipationQueueBody .comp-checkbox:checked');
+            if(checkboxes.length === 0) return Swal.fire('แจ้งเตือน', 'กรุณาเลือกรายการที่ต้องการพิมพ์', 'warning');
+            
+            idsToPrint = Array.from(checkboxes).map(cb => cb.value);
+            
+            const firstItem = compParticipationQueue.find(x => x.id.toString() === idsToPrint[0].toString());
+            
+            currentTemplateType = 'award'; // Still use award template
+            
+            Swal.fire({title: 'กำลังเตรียมข้อมูล...', didOpen:()=>Swal.showLoading()});
+            
+            if(firstItem && firstItem.activity) {
+                 await loadTemplateDataDirect(firstItem.activity);
+            }
+
+            // --- MAGIC: Change Text for Comp Participation Mode ---
+            const elReward = document.getElementById('el_reward');
+            if(elReward) {
+                // If the item has specific award name like 'เข้าร่วม', use it, otherwise default text
+                const awardText = firstItem.award_name || 'ได้เข้าร่วมการแข่งขัน [กิจกรรมย่อย]';
+                // If it is just 'เข้าร่วม', make it a full sentence
+                elReward.innerText = (awardText === 'เข้าร่วม') ? 'ได้เข้าร่วมการแข่งขัน [กิจกรรมย่อย]' : awardText; 
+            }
+            // -----------------------------------------------------
+
+            const nextNo = await fetchAndSetNextCertNo(); 
+            Swal.close();
+
+            let combined = '';
+            const names = String(firstItem.student).replace(/[\[\]"]/g, '').split(/,|\n/).map(n => n.trim()).filter(n => n.length > 0);
+            const n = names[0];
+            
+            combined += generateSingleCertHTML(firstItem, n, nextNo);
+            combined = `<div class="text-center mb-4 text-nsBlue font-bold">รายการที่เลือกทั้งหมด: ${idsToPrint.length} รายการ (แสดงตัวอย่างใบแรก)</div>` + combined;
+
+            document.getElementById('printPreviewModal').dataset.startNo = nextNo; 
+            showPreview(combined); 
+        }
+        
+        async function printSelectedParticipation() {
+            const checkboxes = document.querySelectorAll('#participationTableBody .part-checkbox:checked');
+            if(checkboxes.length === 0) return Swal.fire('แจ้งเตือน', 'กรุณาเลือกรายการที่ต้องการพิมพ์', 'warning');
+            
+            idsToPrint = Array.from(checkboxes).map(cb => cb.value);
+            const firstItem = participationQueue.find(x => x.id.toString() === idsToPrint[0].toString());
+            
+            const prevType = currentTemplateType; 
+            currentTemplateType = 'participate'; 
+            
+            Swal.fire({title: 'กำลังเตรียมข้อมูล...', didOpen:()=>Swal.showLoading()});
+            await loadTemplateDataDirect(firstItem.activity);
+            const nextNo = await fetchAndSetNextCertNo(); 
+            Swal.close();
+
+            let combined = '';
+            const names = String(firstItem.student).replace(/[\[\]"]/g, '').split(/,|\n/).map(n => n.trim()).filter(n => n.length > 0);
+            const n = names[0];
+            combined += generateSingleCertHTML(firstItem, n, nextNo);
+            combined = `<div class="text-center mb-4 text-nsBlue font-bold">รายการที่เลือกทั้งหมด: ${idsToPrint.length} รายการ (แสดงตัวอย่างใบแรก)</div>` + combined;
+
+            document.getElementById('printPreviewModal').dataset.startNo = nextNo; 
+            showPreview(combined); 
+        }
+
         async function printCert(id) { 
-            const item = printQueue.find(x => x.id.toString() === id.toString()) || participationQueue.find(x => x.id.toString() === id.toString()) || organizationQueue.find(x => x.id.toString() === id.toString()); 
+            const item = printQueue.find(x => x.id.toString() === id.toString()) || participationQueue.find(x => x.id.toString() === id.toString()) || organizationQueue.find(x => x.id.toString() === id.toString()) || compParticipationQueue.find(x => x.id.toString() === id.toString()); 
             if(item) { idsToPrint = [id]; Swal.fire({title: 'เตรียมข้อมูล...', didOpen:()=>Swal.showLoading()}); const nextNo = await fetchAndSetNextCertNo(); Swal.close(); 
                 let combined = ''; const names = String(item.student).replace(/[\[\]"]/g, '').split(/,|\n/).map(n => n.trim()).filter(n => n.length > 0);
                 let current = nextNo; names.forEach(n => { combined += generateSingleCertHTML(item, n, current); current = incrementCode(current); });
@@ -822,6 +1049,7 @@
             return `<div class="print-page py-10"><div class="a4-preview ${document.getElementById('page_orientation').value}" style="transform: scale(0.65); transform-origin: top center; margin: 0 auto;">${wrapper.innerHTML}</div></div>`;
         }
         async function printAllPending() {
+            // Deprecated function, kept for safety but button calls printSelectedAwards now
             idsToPrint = printQueue.filter(x => x.status !== 'พิมพ์แล้ว').map(x => x.id);
             if(idsToPrint.length === 0) return Swal.fire('Error', 'ไม่มีรายการรอพิมพ์', 'info');
             Swal.fire({title: 'เตรียมข้อมูล...', didOpen:()=>Swal.showLoading()}); const nextNo = await fetchAndSetNextCertNo(); Swal.close();
@@ -853,7 +1081,7 @@
             const capture = document.getElementById('captureContainer');
 
             // รวมทุกคิวเพื่อค้นหาข้อมูล
-            const allItems = [...printQueue, ...participationQueue, ...organizationQueue];
+            const allItems = [...printQueue, ...participationQueue, ...organizationQueue, ...compParticipationQueue];
             
             // Prepare tasks for background processing
             const tasks = [];
@@ -952,15 +1180,23 @@
                     await Promise.all([
                         ...idsToPrint.map(id => {
                             const foundItem = allItems.find(x => x.id.toString() === id.toString());
-                            const sheetType = foundItem ? foundItem.type : 'award';
+                            // Determine sheet type for status update
+                            let sheetType = 'award'; // default
+                            if(foundItem.type) sheetType = foundItem.type;
+                            else if(participationQueue.includes(foundItem)) sheetType = 'participate';
+                            else if(organizationQueue.includes(foundItem)) sheetType = 'organization';
+                            else if(compParticipationQueue.includes(foundItem)) sheetType = 'comp_participation';
+
                             return callAPI({ action: 'updatePrintStatus', id: id, sheetName: sheetType });
                         }),
                         callAPI({ action: 'logCertBatch', list: logs })
                     ]);
                     
                     // อัปเดตรายการหน้าเว็บ (Refresh Tables)
-                    loadPrintQueue(); 
+                    loadPrintQueue();
+                    loadCompParticipationList(); 
                     loadOrganizationList(); 
+                    loadParticipationList();
                 } catch(e) { console.error(e); }
             })();
         }
@@ -1042,4 +1278,3 @@
     </script>
 </body>
 </html>
-
